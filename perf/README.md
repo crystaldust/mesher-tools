@@ -11,7 +11,7 @@ The project contains a simple http server and client. User first makes a call to
 
 ### Build the project
 
-Run the `build.sh` script under `server/` and `client/` folder, the script will build the binaries with a container go environment and build the server and client images. After that, make the images available to the Kubernetes cluster.
+Run the `build.sh` script under `server/` and `client/` folder, the script will build the binaries with a container go environment and build the server and client images. After that, make the images available to the Kubernetes cluster. Then install the project with one of the following deployment types.
 
 ### The deployments
 
@@ -85,7 +85,7 @@ $ wrk -t12 -c40 -d60s http://{CLIENT-SERVICE-ADDR}:9000
 
 ### Sample test results
 
-The sample result are taken from a 3 node virtual machine(4U4G) Kubernetes cluster, with a [wrk](https://github.com/wg/wrk) test command `wrk -t12 -c40 -d60s http://{CLIENT-SERVICE-ADDR}:9000`. The output might vary by different environment and test tools and even test arguments. So the side effect is more important than the absolute performance value. More test results(the consumption on CPU, memory; tests with governance abilities enabled, etc.) will be added in the future.
+The sample result are taken from a 3 node virtual machine(4U4G) Kubernetes cluster, with a [wrk](https://github.com/wg/wrk) test command `wrk -t12 -c40 -d60s http://{CLIENT-SERVICE-ADDR}:9000`. The output might vary by different environments and test tools and even test arguments. So the side effect is more important than the absolute performance value. More test results(the consumption on CPU, memory; tests with governance abilities enabled, etc.) will be added in the future.
 
 |                  | Original | With Mesher | With Istio(Min) |
 | ---------------- | -------- | ----------- | --------------- |
