@@ -1,0 +1,50 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: perf-client
+spec:
+  selector:
+    matchLabels:
+      app: perf-client
+  template:
+    metadata:
+      labels:
+        app: perf-client
+      annotations:
+        sidecar.istio.io/inject: "false"
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: worker1
+                operator: In
+                values:
+                - "true"
+      containers:
+        - name: perf-client
+          image: xiaoliang/client-go:latest
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: TARGET
+            value: http://perf-server:9999
+          ports:
+            - containerPort: 9000
+
+---
+apiVersion: v1
+kind: Service
+apiVersion: v1
+metadata:
+  name: perf-client
+spec:
+  selector:
+    app: perf-client
+  ports:
+  - protocol: TCP
+    name: http
+    port: 9000
+    nodePort: 9000
+  type: NodePort
+  externalIPs: ['192.168.43.80']
