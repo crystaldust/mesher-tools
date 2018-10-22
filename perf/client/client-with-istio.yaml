@@ -48,4 +48,3 @@ spec:
     nodePort: 9000
     targetPort: 9000
   type: NodePort
-  externalIPs: ['192.168.43.80']

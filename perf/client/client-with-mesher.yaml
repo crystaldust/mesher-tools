@@ -51,4 +51,3 @@ spec:
     port: 9000
     nodePort: 9000
   type: NodePort
-  externalIPs: ['192.168.43.80']
