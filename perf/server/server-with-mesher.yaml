@@ -1,0 +1,51 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: server-with-mesher
+spec:
+  selector:
+    matchLabels:
+      app: server-with-mesher
+  template:
+    metadata:
+      annotations:
+        sidecar.mesher.io/inject: "yes"
+        sidecar.mesher.io/discoveryType: "sc"
+        sidecar.istio.io/inject: "false"
+      labels:
+        app: server-with-mesher
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: worker2
+                operator: In
+                values:
+                - "true"
+      containers:
+        - name: server-with-mesher
+          image: xiaoliang/server-go
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: http_proxy
+            value: http://127.0.0.1:30101/
+          ports:
+            - containerPort: 9999
+---
+apiVersion: v1
+kind: Service
+apiVersion: v1
+metadata:
+  name: server-with-mesher
+spec:
+  selector:
+    app: server-with-mesher
+  ports:
+  - protocol: TCP
+    name: http
+    port: 9999
+    nodePort: 9999
+    targetPort: 9999
+  type: NodePort

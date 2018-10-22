@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: server-with-istio
+spec:
+  selector:
+    matchLabels:
+      app: server-with-istio
+  template:
+    metadata:
+      annotations:
+        sidecar.istio.io/inject: "true"
+      labels:
+        app: server-with-istio
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: worker2
+                operator: In
+                values:
+                - "true"
+      containers:
+        - name: server-with-istio
+          image: xiaoliang/server-go
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9999
+---
+apiVersion: v1
+kind: Service
+apiVersion: v1
+metadata:
+  name: server-with-istio
+spec:
+  selector:
+    app: server-with-istio
+  ports:
+  - protocol: TCP
+    name: http
+    port: 9999
+    nodePort: 9999
+    targetPort: 9999
+  type: NodePort
